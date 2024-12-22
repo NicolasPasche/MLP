@@ -13,8 +13,7 @@ class MLP(object):
                  n_input_neurons=2,
                  n_hidden_neurons=2,
                  n_output_neurons=1,
-                 weights=None,
-                 # NEW 
+                 weights=None, 
                  eta=0.01, n_iterations=10, random_state=2, 
                  *args, **kwargs):
         """
@@ -45,15 +44,15 @@ class MLP(object):
         self.weights = weights
         W_IH = []
         W_HO = []
-        # NEW Learning rate
+        # Learning rate
         self.eta = eta
         # Iterations
         self.n_iterations = n_iterations
-        # NEW Random Number Generator
+        # Random Number Generator
         self.random_state = random_state
-        # NEW Creation of RNG
+        # Creation of RNG
         self.random_state_ = check_random_state(self.random_state)
-        # NEW Error at fit
+        # Error at fit
         self.errors = []        
         self.network = []
         self.inputLayer = np.zeros((self.n_input_neurons + 1, 5))
@@ -62,11 +61,10 @@ class MLP(object):
         if weights:
             W_IH = self.weights[0]    
         else:
-            # NEW
             W_IH = 2 * self.random_state_.random_sample(\
             (self.n_hidden_neurons + 1, self.n_input_neurons + 1)) - 1
         self.network.append(W_IH)
-        # NEW Hidden Layer + Bias Neuron: 
+        # Hidden Layer + Bias Neuron: 
         # Columns = net_i, a_i, o_i, d_i, delta_i
         self.hiddenLayer = np.zeros((self.n_hidden_neurons + 1, 5))
         self.hiddenLayer[0] = 1.0 
@@ -74,11 +72,10 @@ class MLP(object):
         if weights:
             W_HO = self.weights[1]
         else:
-            # NEW
             W_HO = 2 * self.random_state_.random_sample(\
             (self.n_output_neurons + 1, self.n_hidden_neurons + 1)) - 1
         self.network.append(W_HO)
-        # NEW Output Layer + Bias Neuron: 
+        # Output Layer + Bias Neuron: 
         # Columns = net_i, a_i, o_i, d_i, delta_i
         self.outputLayer = np.zeros((self.n_output_neurons + 1, 5)) 
         self.outputLayer[0] = 0.0 
@@ -109,7 +106,7 @@ class MLP(object):
                                        self.network[2][1:, 0]) 
         # o_j
         self.network[2][1:, 2] = self.func_id(self.network[2][1:, 1]) 
-        # NEW der_j = o_j*(1 - o_j) Derivative of sigmoid
+        # der_j = o_j*(1 - o_j) Derivative of sigmoid
         self.network[2][1:, 3] = self.network[2][1:, 2] \
                                 * (1.0 - self.network[2][1:, 2])
         ###############
@@ -123,7 +120,7 @@ class MLP(object):
                                        self.network[4][1:, 0]) 
         # o_k
         self.network[4][1:, 2] = self.func_id(self.network[4][1:, 1])
-        # NEW der_k = o_k*(1 - o_k) Derivative of sigmoid
+        # der_k = o_k*(1 - o_k) Derivative of sigmoid
         self.network[4][1:, 3] = self.network[4][1:, 2] \
                                 * (1.0 - self.network[4][1:, 2])
         
@@ -180,6 +177,11 @@ class MLP(object):
         plt.plot(self.errors) 
         plt.xlabel('Iteration')
         plt.ylabel('Error')
+        plt.title('Training Error Over Iterations')  # Added title for clarity
+        plt.grid(True)  # Added grid for better readability
+        plt.legend(['Error'], loc='upper right')  # Added legend
+        plt.show()  # Added to ensure the plot is displayed
+
 
 def main():
     X = np.array([[1.0, 1.0, 1.0], [1.0, 0, 1.0], [1.0, 1.0, 0], [1.0, 0, 0]])
